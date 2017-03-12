@@ -35,6 +35,7 @@ class Response
         $this->body = $content;
         $this->code = $code;
         $this->addHeader('Content-Type','text/html');
+        $this->send();
     }
 
     /**
@@ -69,7 +70,6 @@ class Response
      * show content
      */
     public function sendContent(){
-        echo '<dd>' . $this->body . '</dd>';
-        echo '<dd>' . $this->code . '</dd>';
+        echo $this->body;
     }
 }

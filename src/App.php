@@ -34,19 +34,7 @@ class App
 
             $routerResult = $router->getRoute($request);
 
-            /*
-                echo $routerResult->name.'<br>';
-                echo $routerResult->controller.'<br>';
-                echo $routerResult->method.'<br>';
-                var_dump($routerResult->params);
-                echo '<br>';
-                var_dump($routerResult->enhanceParams);
-                echo '<br>';
-            */
-
-
-            Router::valid($routerResult->controller, $routerResult->method, $routerResult->params);
-
+            Router::valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
 
         }  catch (InvalidHttpMethodException $e) {
             echo $e->getMessage();

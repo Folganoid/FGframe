@@ -147,20 +147,26 @@ class Router
         return $pattern;
     }
 
-    public static function valid($routeController, $routeMethod, $routeParams)
+    /**
+     * Route validator
+     *
+     * @param $routeController
+     * @param $routeMethod
+     * @param $routeParams
+     * @throws InvalidRouteControllerException
+     * @throws InvalidRouteMethodException
+     */
+    public static function valid($routeController, $routeMethod, $routeParams = [], $routeEnhanceParams = [])
     {
 
         if (class_exists($routeController)) {
             $refClass = new \ReflectionClass($routeController);
 
             if ($refClass->hasMethod($routeMethod)) {
-                $refMethod = $refClass->getMethod($routeMethod);
-                $controller = $refClass->newInstance();
 
-                $refMethod->invokeArgs($controller, $routeParams);
+                $aaa = new $routeController;
+                $aaa->$routeMethod($routeParams, $routeEnhanceParams);
 
-                $show = new Response();
-                $show->send();
             } else throw new InvalidRouteMethodException($routeMethod . ' - Invalid Route Method');
         } else throw new InvalidRouteControllerException($routeController . ' - Invalid Route Controller');
     }
