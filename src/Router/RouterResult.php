@@ -7,17 +7,20 @@ namespace Fg\Frame\Router;
 class RouterResult
 {
     public $name = '';
-
     public $controller = '';
-
     public $method = '';
-
     public $params = [];
-
     public $enhanceParams = [];
 
-
-    public function __construct(string $name, string $controller, string $method, array $var, array $enhVar = [])
+    /**
+     * RouterResult constructor.
+     * @param string $name
+     * @param string $controller
+     * @param string $method
+     * @param array $var
+     * @param array $enhVar
+     */
+    public function __construct(string $name, string $controller, string $method, array $var = [], array $enhVar = [])
     {
        $this->name = $name;
        $this->controller = $controller;
@@ -25,4 +28,6 @@ class RouterResult
        $this->params = $var;
        $this->enhanceParams = $enhVar;
     }
+
+
 }

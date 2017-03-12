@@ -3,14 +3,14 @@
  * Created by PhpStorm.
  * User: fg
  * Date: 21.02.17
- * Time: 17:19
+ * Time: 17:23
  */
 namespace Fg\Frame\Exceptions;
 /**
- * Class InvalidUrlException
+ * Class InvalidRouteMethodException
  * @package Fg\Frame\Exceptions
  */
-class InvalidUrlException extends \Exception
+class InvalidRouteMethodException extends \Exception
 {
 
 }
