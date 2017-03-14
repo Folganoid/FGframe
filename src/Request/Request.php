@@ -32,9 +32,17 @@ class Request
         return self::$request;
     }
 
-    private function __clone() {}
-    private function __sleep() {}
-    private function __wakeup() {}
+    private function __clone()
+    {
+    }
+
+    private function __sleep()
+    {
+    }
+
+    private function __wakeup()
+    {
+    }
 
 
     /**
@@ -44,15 +52,13 @@ class Request
      */
     public function getUri(): string
     {
-        if((substr(self::$URI, -1) == "/") AND strlen(self::$URI) > 1) {
+        if ((substr(self::$URI, -1) == "/") AND strlen(self::$URI) > 1) {
             $result = substr(self::$URI, 0, -1);
-        }
-        else $result = self::$URI;
+        } else $result = self::$URI;
 
         if (strpos($result, "?")) {
             return substr($result, 0, strpos($result, "?"));
-        }
-        else return $result;
+        } else return $result;
 
     }
 
@@ -79,7 +85,7 @@ class Request
 
         $result = [];
 
-        for( $i=0; $i<count($tempArr) ; $i++ ) {
+        for ($i = 0; $i < count($tempArr); $i++) {
             $result[(explode('=', $tempArr[$i]))[0]] = (explode('=', $tempArr[$i]))[1];
         }
 

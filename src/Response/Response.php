@@ -34,7 +34,7 @@ class Response
     {
         $this->body = $content;
         $this->code = $code;
-        $this->addHeader('Content-Type','text/html');
+        $this->addHeader('Content-Type', 'text/html');
         $this->send();
     }
 
@@ -42,14 +42,16 @@ class Response
      * @param $key
      * @param $value
      */
-    public function addHeader($key, $value){
+    public function addHeader($key, $value)
+    {
         $this->headers[$key] = $value;
     }
 
     /**
      * Send response
      */
-    public function send(){
+    public function send()
+    {
         $this->sendHeaders();
         $this->sendContent();
     }
@@ -57,11 +59,12 @@ class Response
     /**
      * add headers
      */
-    public function sendHeaders(){
+    public function sendHeaders()
+    {
         header($_SERVER['SERVER_PROTOCOL'] . " " . $this->code . " " . self::STATUS_MSGS[$this->code]);
-        if(!empty($this->headers)){
-            foreach($this->headers as $key => $value){
-                header($key.": ". $value);
+        if (!empty($this->headers)) {
+            foreach ($this->headers as $key => $value) {
+                header($key . ": " . $value);
             }
         }
     }
@@ -69,7 +72,8 @@ class Response
     /**
      * show content
      */
-    public function sendContent(){
+    public function sendContent()
+    {
         echo $this->body;
     }
 }

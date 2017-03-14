@@ -22,11 +22,11 @@ class RouterResult
      */
     public function __construct(string $name, string $controller, string $method, array $var = [], array $enhVar = [])
     {
-       $this->name = $name;
-       $this->controller = $controller;
-       $this->method = $method;
-       $this->params = $var;
-       $this->enhanceParams = $enhVar;
+        $this->name = $name;
+        $this->controller = $controller;
+        $this->method = $method;
+        $this->params = $var;
+        $this->enhanceParams = $enhVar;
     }
 
 

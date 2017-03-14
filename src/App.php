@@ -19,7 +19,7 @@ class App
 {
     private $config;
 
-    public function __construct($config=[])
+    public function __construct($config = [])
     {
         $this->config = $config['routeConfig'];
 
@@ -36,7 +36,7 @@ class App
 
             Router::valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
 
-        }  catch (InvalidHttpMethodException $e) {
+        } catch (InvalidHttpMethodException $e) {
             echo $e->getMessage();
         } catch (InvalidUrlException $e) {
             echo $e->getMessage();

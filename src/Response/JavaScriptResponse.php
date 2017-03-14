@@ -19,7 +19,7 @@ class JavaScriptResponse extends Response
     {
         parent::__construct($content, $code);
 
-        $this->addHeader('Content-Type','application/javascript');
+        $this->addHeader('Content-Type', 'application/javascript');
 
         $this->addArrHeaders($headers);
 
@@ -30,8 +30,9 @@ class JavaScriptResponse extends Response
     /**
      * show content
      */
-    public function sendContent(){
-        echo '<script>'.$this->body.'</script>';
+    public function sendContent()
+    {
+        echo '<script>' . $this->body . '</script>';
     }
 
 
@@ -39,7 +40,8 @@ class JavaScriptResponse extends Response
      * @param $arr
      * add enhanced params
      */
-    public function addArrHeaders($arr) {
+    public function addArrHeaders($arr)
+    {
 
         foreach ($arr as $key => $value) {
             $this->addHeader($key, $value);

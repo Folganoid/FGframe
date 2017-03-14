@@ -21,12 +21,12 @@ class RedirectResponse extends Response
      * @param string $url
      * @param int $code
      */
-   public function __construct($url, $code = 301)
-   {
-       $this->code = $code;
-       $this->addHeader('Location', $url);
-       $this->sendHeaders();
+    public function __construct($url, $code = 301)
+    {
+        $this->code = $code;
+        $this->addHeader('Location', $url);
+        $this->sendHeaders();
 
-   }
+    }
 
 }
