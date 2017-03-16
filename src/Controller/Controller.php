@@ -18,7 +18,6 @@ use Fg\Frame\Response\Response;
  */
 class Controller
 {
-
     private $configDir;
 
     /**
@@ -31,7 +30,7 @@ class Controller
     }
 
     /**
-     * add variables in html content
+     * get together page
      *
      * @param string $view_path
      * @param array $params
@@ -41,35 +40,31 @@ class Controller
      */
     public function render(string $view_path, array $params = [], $enhanceParams = [], bool $with_layout = true): Response
     {
-        //get rendered info
         $content = Renderer::render($view_path);
-        //return response
-
-        if (count($params) > 0) {
-
-            foreach ($params as $key => $value) {
-
-                $content = str_replace('{{' . $key . '}}', $value, $content);
-            }
-
-        }
-
-        if (count($enhanceParams) > 0) {
-
-            foreach ($enhanceParams as $key => $value) {
-                $content = str_replace('{{' . $key . '}}', $value, $content);
-            }
-
-        }
+        $allParams = array_merge($params, $enhanceParams);
 
         if ($with_layout) {
-            $head = file_get_contents($this->configDir['head']);
-            $footer = file_get_contents($this->configDir['footer']);
-
-            return new Response($head . $content . $footer);
+            $pages = [
+                'head' => file_get_contents($this->configDir['head']),
+                'page' => $content,
+                'footer' => file_get_contents($this->configDir['footer'])
+            ];
+        } else {
+            $pages = [
+                'page' => $content,
+            ];
         }
 
-        return new Response($content);
+        $loader = new \Twig_Loader_Array($pages);
+        $twig = new \Twig_Environment($loader);
+
+        $result = '';
+
+        foreach ($pages as $key => $val) {
+            $result .= $twig->render($key, $allParams);
+        }
+
+        return new Response($result);
 
     }
 }
