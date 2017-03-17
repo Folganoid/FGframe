@@ -26,7 +26,6 @@ class App
     public function __construct($config = [])
     {
         $this->config = $config['routeConfig'];
-        require_once __DIR__.'/../vendor/autoload.php';
     }
 
     public function start()
