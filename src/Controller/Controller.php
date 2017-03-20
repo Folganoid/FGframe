@@ -8,8 +8,6 @@
 
 namespace Fg\Frame\Controller;
 
-
-use Fg\Frame\Renderer\Renderer;
 use Fg\Frame\Response\Response;
 
 /**
@@ -40,7 +38,7 @@ class Controller
      */
     public function render(string $view_path, array $params = [], $enhanceParams = [], bool $with_layout = true): Response
     {
-        $content = Renderer::render($view_path);
+        $content = file_get_contents($view_path);
         $allParams = array_merge($params, $enhanceParams);
 
         if ($with_layout) {

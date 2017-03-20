@@ -7,13 +7,12 @@ use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
 use Fg\Frame\Request\Request;
-use Fg\Frame\Response\Response;
 use Fg\Frame\Router\Router;
 
 
 /**
  * Class App
- * @package Mindk\Framework
+ * @package Fg\Frame
  */
 class App
 {
@@ -28,6 +27,10 @@ class App
         $this->config = $config['routeConfig'];
     }
 
+    /**
+     * starting the application
+     *
+     */
     public function start()
     {
         $request = Request::getRequest();
