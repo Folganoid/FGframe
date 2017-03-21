@@ -22,7 +22,7 @@ class Validation
      * @param array $vars
      * @return bool
      */
-    public static function Check(string $str, $rule = false, array $vars = []): bool
+    public static function check(string $str, $rule = false, array $vars = []): bool
     {
         self::$rules = include((ROOTDIR . '/config/validation.php'));
         self::$vars = $vars;
@@ -39,7 +39,7 @@ class Validation
                 }
             }
 
-            self::$rule = preg_match($pattern, $str, $matches);
+            self::$rule = preg_match('/^' . $pattern . '$/', $str, $matches);
 
             if (!$matches) {
                 static::setError('RegExp pattern does not match');
@@ -78,7 +78,7 @@ class Validation
      * @param $str
      * @return string
      */
-    public static function EntrySecure(string $str): string
+    public static function entrySecure(string $str): string
     {
         return nl2br(htmlspecialchars(trim($str), ENT_QUOTES), false);
     }

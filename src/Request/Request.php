@@ -46,7 +46,8 @@ class Request
 
 
     /**
-     * Get current URI
+     * Get current URI without GET params
+     * trim '/' from end, if exist
      *
      * @return string
      */
@@ -59,7 +60,6 @@ class Request
         if (strpos($result, "?")) {
             return substr($result, 0, strpos($result, "?"));
         } else return $result;
-
     }
 
     /**
@@ -79,18 +79,7 @@ class Request
      */
     public function getUriParams(): array
     {
-        $tempArr = preg_split("`\?|\&`", self::$URI);
-        unset($tempArr[0]);
-        sort($tempArr);
-
-        $result = [];
-
-        for ($i = 0; $i < count($tempArr); $i++) {
-            $result[(explode('=', $tempArr[$i]))[0]] = (explode('=', $tempArr[$i]))[1];
-        }
-
-        return $result;
-
+        return $_GET;
     }
 
 }

@@ -44,7 +44,7 @@ class Router
     {
         $uri = $request->getUri();          // from $_SERVER
         $method = $request->getMethod();    // from $_SERVER
-        $enhanceParams = $request->getUriParams();
+        $enhanceParams = $request->getUriParams(); // from $_GET
 
         foreach ($this->routes as $key => $value) {
             if ((preg_match('`' . $value['regexp'] . '`', $uri, $matches)) AND ($method == $value['method'])) {
