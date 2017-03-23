@@ -8,6 +8,7 @@ use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
 use Fg\Frame\Request\Request;
 use Fg\Frame\Router\Router;
+use Fg\Frame\Validation\Validation;
 
 
 /**
@@ -22,9 +23,9 @@ class App
      * App constructor.
      * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct()
     {
-        $this->config = $config['routeConfig'];
+        $this->config = Validation::checkConfigFile(ROOTDIR . '/config/routing.php');
     }
 
     /**
@@ -34,6 +35,7 @@ class App
     public function start()
     {
         $request = Request::getRequest();
+
         $router = new Router($this->config);
 
         try {

@@ -1,6 +1,7 @@
 <?php
 
 namespace Fg\Frame\Validation;
+use Fg\Frame\Exceptions\BadConfigFileException;
 
 /**
  * Class Validation
@@ -24,7 +25,7 @@ class Validation
      */
     public static function check(string $str, $rule = false, array $vars = []): bool
     {
-        self::$rules = include((ROOTDIR . '/config/validation.php'));
+        self::$rules = self::checkConfigFile(ROOTDIR . '/config/validation.php');
         self::$vars = $vars;
         self::$rule = $rule;
         self::$errors = []; // reset
@@ -81,6 +82,34 @@ class Validation
     public static function entrySecure(string $str): string
     {
         return nl2br(htmlspecialchars(trim($str), ENT_QUOTES), false);
+    }
+
+    /**
+     * validator for configfile
+     *
+     * @param string $file
+     * @return array
+     */
+    public static function checkConfigFile(string $file): array
+    {
+        try {
+
+            if(file_exists($file)) {
+                $res = include($file);
+            }
+            else {
+                throw new BadConfigFileException('Can`t find config file '.$file);
+            }
+
+            if (!is_array($res)) {
+                throw new BadConfigFileException('Bad parameters in config file '.$file);
+            }
+
+        } catch (BadConfigFileException $e) {
+            exit($e->getMessage());
+        }
+
+        return $res;
     }
 
 }
