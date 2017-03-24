@@ -8,6 +8,10 @@ use Fg\Frame\Exceptions\InvalidUrlException;
 use Fg\Frame\Request\Request;
 use Fg\Frame\Response\Response;
 
+/**
+ * Class Router
+ * @package Fg\Frame\Router
+ */
 class Router
 {
     const DEFAULT_VAR_REGEXP = "[^\/]+";
@@ -48,9 +52,7 @@ class Router
 
         foreach ($this->routes as $key => $value) {
             if ((preg_match('`' . $value['regexp'] . '`', $uri, $matches)) AND ($method == $value['method'])) {
-
                 $variablesArr = [];
-
                 for ($i = 0; $i < count($value['variables']); $i++) {
                     $variablesArr[$value['variables'][$i]] = $matches[$i + 1];
                 }
@@ -59,8 +61,7 @@ class Router
                 throw new InvalidHttpMethodException("Method '" . $method . "' is not allow");
             }
         };
-        throw new InvalidUrlException("Incorrect link: '" . $uri . "'");
-
+        throw new InvalidUrlException("Incorrect link - ". $uri );
     }
 
     /**

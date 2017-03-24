@@ -1,7 +1,6 @@
 <?php
 
 namespace Fg\Frame\Response;
-use Fg\Frame\Exceptions\BadConfigFileException;
 use Fg\Frame\Validation\Validation;
 
 /**

@@ -8,7 +8,11 @@
 
 namespace Fg\Frame\Controller;
 
+use Fg\Frame\Exceptions\FileNotFoundException;
+use Fg\Frame\Renderer\Renderer;
+use Fg\Frame\Response\JSONResponse;
 use Fg\Frame\Response\Response;
+use Fg\Frame\Validation\Validation;
 
 /**
  * Class Controller
@@ -38,7 +42,17 @@ class Controller
      */
     public function render(string $view_path, array $params = [], $enhanceParams = [], bool $with_layout = true): Response
     {
-        $content = file_get_contents($view_path);
+        try {
+            $render = new Renderer($view_path);
+            $content = $render->getContent();
+        } catch (FileNotFoundException $e) {
+            exit($e->getMessage());
+        }
+
+        if (Validation::isJSON($content)) {
+            return new JSONResponse($content);
+        }
+
         $allParams = array_merge($params, $enhanceParams);
 
         if ($with_layout) {

@@ -94,7 +94,7 @@ class Validation
     {
         try {
 
-            if(file_exists($file)) {
+            if (file_exists($file)) {
                 $res = include($file);
             }
             else {
@@ -110,6 +110,16 @@ class Validation
         }
 
         return $res;
+    }
+
+    /**
+     * check JSON type
+     *
+     * @param $str
+     * @return bool
+     */
+    public static function isJSON($str) {
+        return ((is_string($str) && (is_object(json_decode($str)) || is_array(json_decode($str))))) ? true : false;
     }
 
 }
