@@ -9,6 +9,7 @@ class Request
 {
     private static $request = null;
     public static $URI;
+    public $params;
 
     /**
      * Request constructor.
@@ -58,6 +59,7 @@ class Request
         } else $result = self::$URI;
 
         if (strpos($result, "?")) {
+            $this->params = substr($result, strpos($result, "?") + 1);
             return substr($result, 0, strpos($result, "?"));
         } else return $result;
     }
@@ -79,7 +81,9 @@ class Request
      */
     public function getUriParams(): array
     {
-        return $_GET;
+        $res = [];
+        parse_str($this->params, $res);
+        return $res;
     }
 
 }

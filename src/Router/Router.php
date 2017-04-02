@@ -48,7 +48,7 @@ class Router
     {
         $uri = $request->getUri();          // from $_SERVER
         $method = $request->getMethod();    // from $_SERVER
-        $enhanceParams = $request->getUriParams(); // from $_GET
+        $enhanceParams = $request->getUriParams();
 
         foreach ($this->routes as $key => $value) {
             if ((preg_match('`' . $value['regexp'] . '`', $uri, $matches)) AND ($method == $value['method'])) {
@@ -162,12 +162,9 @@ class Router
 
         if (class_exists($routeController)) {
             $refClass = new \ReflectionClass($routeController);
-
             if ($refClass->hasMethod($routeMethod)) {
-
                 $aaa = new $routeController;
                 $aaa->$routeMethod($routeParams, $routeEnhanceParams);
-
             } else throw new InvalidRouteMethodException($routeMethod . ' - Invalid Route Method');
         } else throw new InvalidRouteControllerException($routeController . ' - Invalid Route Controller');
     }

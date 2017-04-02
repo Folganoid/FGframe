@@ -26,7 +26,7 @@ class Controller
      * Controller constructor.
      * @param array $configDir
      */
-    public function __construct($configDir = [])
+    public function __construct(array $configDir = [])
     {
         $this->configDir = $configDir;
     }
@@ -40,7 +40,7 @@ class Controller
      * @param bool $with_layout
      * @return Response
      */
-    public function render(string $view_path, array $params = [], $enhanceParams = [], bool $with_layout = true): Response
+    public function render(string $view_path, array $params = [], array $enhanceParams = [], bool $with_layout = true): Response
     {
         try {
             $render = new Renderer($view_path);
@@ -49,7 +49,7 @@ class Controller
             exit($e->getMessage());
         }
 
-        if (Validation::isJSON($content)) {
+        if ($this->isJSON($content)) {
             return new JSONResponse($content);
         }
 
@@ -77,6 +77,17 @@ class Controller
         }
 
         return new Response($result);
-
     }
+    /**
+     * check JSON type
+     *
+     * @param $str
+     * @return bool
+     */
+    public function isJSON(string $str): bool
+    {
+        return ((is_string($str) && (is_object(json_decode($str)) || is_array(json_decode($str))))) ? true : false;
+    }
+
+
 }

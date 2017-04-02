@@ -108,18 +108,6 @@ class Validation
         } catch (BadConfigFileException $e) {
             exit($e->getMessage());
         }
-
         return $res;
     }
-
-    /**
-     * check JSON type
-     *
-     * @param $str
-     * @return bool
-     */
-    public static function isJSON($str) {
-        return ((is_string($str) && (is_object(json_decode($str)) || is_array(json_decode($str))))) ? true : false;
-    }
-
 }
