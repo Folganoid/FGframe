@@ -20,7 +20,24 @@ use Fg\Frame\Validation\Validation;
  */
 class Controller
 {
-    private $configDir;
+
+    protected $configDir;
+    private $viewFile;
+
+
+    /**
+     * set view template file
+     * @param $path
+     */
+    public function setViewFile($path)
+    {
+        $this->viewFile = $path;
+    }
+
+    public function getViewFile(): string
+    {
+        return $this->viewFile;
+    }
 
     /**
      * Controller constructor.
@@ -28,7 +45,7 @@ class Controller
      */
     public function __construct(array $configDir = [])
     {
-        $this->configDir = $configDir;
+        $this->configDir = Validation::checkConfigFile(ROOTDIR . '/config/lrsdir.php');
     }
 
     /**
