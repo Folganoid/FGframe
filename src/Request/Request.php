@@ -2,49 +2,21 @@
 
 namespace Fg\Frame\Request;
 /**
- * Class Request - singleton
+ * Class Request
  * @package Fg\Frame\Request
  */
 class Request
 {
-    private static $request = null;
     public static $URI;
     public $params;
 
     /**
      * Request constructor.
      */
-    private function __construct()
+    public function __construct()
     {
         self::$URI = $_SERVER["REQUEST_URI"];
     }
-
-    /**
-     * Returns request
-     *
-     * @return Request
-     */
-    public static function getRequest(): self
-    {
-        if (!self::$request) {
-            self::$request = new self();
-        }
-
-        return self::$request;
-    }
-
-    private function __clone()
-    {
-    }
-
-    private function __sleep()
-    {
-    }
-
-    private function __wakeup()
-    {
-    }
-
 
     /**
      * Get current URI without GET params

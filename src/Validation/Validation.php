@@ -10,10 +10,15 @@ use Fg\Frame\Exceptions\BadConfigFileException;
 class Validation
 {
 
-    public static $rules = [];
-    public static $vars = [];
-    public static $rule = false;
-    public static $errors = [];
+    public $rules = [];
+    public $vars = [];
+    public $rule = false;
+    public $errors = [];
+
+    public function __construct($rules)
+    {
+        $this->rules = $rules;
+    }
 
     /**
      * validator $str
@@ -23,34 +28,35 @@ class Validation
      * @param array $vars
      * @return bool
      */
-    public static function check(string $str, $rule = false, array $vars = []): bool
+    public function check(string $str, $rule = false, array $vars = []): bool
     {
-        self::$rules = self::checkConfigFile(ROOTDIR . '/config/validation.php');
-        self::$vars = $vars;
-        self::$rule = $rule;
-        self::$errors = []; // reset
+        $this->vars = $vars;
+        $this->rule = $rule;
 
-        if (isset(self::$rules[$rule])) {
+        if (isset($this->rules[$rule])) {
 
-            $pattern = self::$rules[$rule];
+            $pattern = $this->rules[$rule];
 
-            if (count(self::$vars) > 0) {
-                foreach (self::$vars as $key => $val) {
-                    $pattern = str_replace($key, $val, $pattern);
+            if (count($this->vars) > 0) {
+                foreach ($this->vars as $key => $val) {
+                    if (strrpos($pattern, '@' . $key . '@') == false) {
+                        $this->setError('Parameter "' . $key . '" not found in rule "' . $rule . '"');
+                    }
+                    $pattern = str_replace('@' . $key . '@', $val, $pattern);
                 }
             }
 
-            self::$rule = preg_match('/^' . $pattern . '$/', $str, $matches);
+            $this->rule = preg_match('/^' . $pattern . '$/', $str, $matches);
 
             if (!$matches) {
-                static::setError('RegExp pattern does not match');
+                $this->setError('RegExp pattern does not match');
             }
 
         } else {
-            static::setError('Unknown validation rule');
+            $this->setError('Unknown validation rule');
         }
 
-        return self::$rule;
+        return $this->rule;
     }
 
     /**
@@ -58,18 +64,18 @@ class Validation
      *
      * @param $message
      */
-    public static function setError(string $message)
+    public function setError(string $message)
     {
-        self::$errors[] = $message;
+        $this->errors[] = $message;
     }
 
     /**
      * show errors
      */
-    public static function getError()
+    public function getError()
     {
-        for ($i = 0; $i < count(self::$errors); $i++) {
-            echo '<dd>' . self::$errors[$i] . '</dd>';
+        for ($i = 0; $i < count($this->errors); $i++) {
+            echo '<dd>' . $this->errors[$i] . '</dd>';
         }
     }
 

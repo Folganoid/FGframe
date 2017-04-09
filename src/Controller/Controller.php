@@ -13,6 +13,7 @@ use Fg\Frame\Renderer\Renderer;
 use Fg\Frame\Response\JSONResponse;
 use Fg\Frame\Response\Response;
 use Fg\Frame\Validation\Validation;
+use Fg\Frame\Router\Router;
 
 /**
  * Class Controller
@@ -20,10 +21,8 @@ use Fg\Frame\Validation\Validation;
  */
 class Controller
 {
-
     protected $configDir;
     private $viewFile;
-
 
     /**
      * set view template file
@@ -34,16 +33,22 @@ class Controller
         $this->viewFile = $path;
     }
 
-    public function getViewFile(): string
+    /**
+     * @return string
+     */
+    public function getViewFile($path = ''): string
     {
+        if ($path != '') {
+            $this->setViewFile($path);
+        }
         return $this->viewFile;
     }
 
     /**
      * Controller constructor.
-     * @param array $configDir
+     * @param $layersDir
      */
-    public function __construct(array $configDir = [])
+    public function __construct()
     {
         $this->configDir = Validation::checkConfigFile(ROOTDIR . '/config/lrsdir.php');
     }
@@ -87,6 +92,14 @@ class Controller
         $loader = new \Twig_Loader_Array($pages);
         $twig = new \Twig_Environment($loader);
 
+        /**
+         * transit getLink() in twig
+         */
+        $function1 = new \Twig_Function('twigLink', function (string $str, array $params = [], array $enhanceParams = []) {
+            return Router::getLink($str, $params, $enhanceParams);
+        });
+
+        $twig->addFunction($function1);
         $result = '';
 
         foreach ($pages as $key => $val) {
@@ -95,6 +108,7 @@ class Controller
 
         return new Response($result);
     }
+
     /**
      * check JSON type
      *

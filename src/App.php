@@ -2,6 +2,9 @@
 
 namespace Fg\Frame;
 
+use Fg\Frame\DI\Injector;
+use Fg\Frame\DI\Service;
+use Fg\Frame\Exceptions\DIErrorException;
 use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
@@ -26,7 +29,7 @@ class App
      */
     public function __construct()
     {
-        $this->config = Validation::checkConfigFile(ROOTDIR . '/config/routing.php');
+        // $this->config = Validation::checkConfigFile(ROOTDIR . '/config/router.php');
     }
 
     /**
@@ -35,19 +38,33 @@ class App
      */
     public function start()
     {
-        $request = Request::getRequest();
+        //$request = new Request();
+        //$router = new Router($this->config['config']);
 
-        $router = new Router($this->config);
+        Injector::setConfig(ROOTDIR . '/config/services.php');
+
+        try {
+
+            $request = Service::get('request');
+            $router = Service::get('router');
+            $validation = Service::get('validation');
+
+           // echo $validation->check('123123', 'min_max_length', ['min' => 2, 'max' => 10]);
+           // $validation->getError();
+
+        } catch (DIErrorException $e) {
+            echo $e->getMessage();
+        }
 
         try {
 
             $routerResult = $router->getRoute($request);
-            Router::valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
+            $router->valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
 
         } catch (InvalidHttpMethodException $e) {
             echo $e->getMessage();
         } catch (InvalidUrlException $e) {
-            new RedirectResponse('/error?code=404&message=' . $e->getMessage(), 404);
+            new RedirectResponse(Router::getLink('error', [], ['code' => 404, 'message' => $e->getMessage()]), 404);
         } catch (InvalidRouteMethodException $e) {
             echo $e->getMessage();
         } catch (InvalidRouteControllerException $e) {
