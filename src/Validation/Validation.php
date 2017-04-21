@@ -15,7 +15,7 @@ class Validation
     public $rule = false;
     public $errors = [];
 
-    public function __construct($rules)
+    public function __construct(array $rules)
     {
         $this->rules = $rules;
     }

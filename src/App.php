@@ -2,17 +2,15 @@
 
 namespace Fg\Frame;
 
-use Fg\Frame\DI\Injector;
-use Fg\Frame\DI\Service;
+use Fg\Frame\DI\DIInjector;
 use Fg\Frame\Exceptions\DIErrorException;
 use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
-use Fg\Frame\Request\Request;
 use Fg\Frame\Response\RedirectResponse;
 use Fg\Frame\Router\Router;
-use Fg\Frame\Validation\Validation;
+
 
 
 /**
@@ -41,16 +39,12 @@ class App
         //$request = new Request();
         //$router = new Router($this->config['config']);
 
-        Injector::setConfig(ROOTDIR . '/config/services.php');
+        DIInjector::setConfig(ROOTDIR . '/config/services.php');
 
         try {
 
-            $request = Service::get('request');
-            $router = Service::get('router');
-            $validation = Service::get('validation');
-
-           // echo $validation->check('123123', 'min_max_length', ['min' => 2, 'max' => 10]);
-           // $validation->getError();
+            $request = DIInjector::get('request');
+            $router = DIInjector::get('router');
 
         } catch (DIErrorException $e) {
             echo $e->getMessage();

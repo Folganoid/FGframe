@@ -15,10 +15,32 @@ use Fg\Frame\Validation\Validation;
  * Class Injector
  * @package Fg\Frame\DI
  */
-class Injector
+class DIInjector
 {
     public static $mapping = [];
 
+    private static $container = [];
+
+    public static function get(string $serviceName)
+    {
+        if (!isset(self::$container[$serviceName])) {
+            self::set($serviceName, self::build($serviceName));
+        }
+        return self::$container[$serviceName];
+    }
+
+    /**
+     * @param string $serviceName
+     * @param $instance
+     */
+    public static function set(string $serviceName, $instance)
+    {
+        self::$container[$serviceName] = $instance;
+    }
+
+    /**
+     * @param string $cfgFile
+     */
     public static function setConfig(string $cfgFile)
     {
         self::$mapping = Validation::checkConfigFile($cfgFile);
