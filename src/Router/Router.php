@@ -61,7 +61,7 @@ class Router
                 throw new InvalidHttpMethodException("Method '" . $method . "' is not allow");
             }
         };
-        throw new InvalidUrlException("Incorrect link - ". $uri );
+        throw new InvalidUrlException("Incorrect link - " . $uri);
     }
 
     /**
@@ -147,7 +147,8 @@ class Router
         return $pattern;
     }
 
-    public static function test($str) {
+    public static function test($str)
+    {
         return $str;
     }
 
