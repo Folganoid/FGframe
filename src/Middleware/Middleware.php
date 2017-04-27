@@ -56,12 +56,14 @@ class Middleware
          * @return bool
          */
         $this->next = function (array $request) {
-
             $this->count++;
-            $this->order[$this->count];
 
-            if (isset($name)) {
-                (new $this->rules[$this->order[$this->count]])->handle($request, $this->next);
+            if (isset($this->order[$this->count])) {
+                try {
+                    (new $this->rules[$this->order[$this->count]])->handle($request, $this->next);
+                } catch (MiddlewareErrorException $e) {
+                    exit($e->getMessage());
+                }
             } else {
                 return true;
             }

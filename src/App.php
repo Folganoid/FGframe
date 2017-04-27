@@ -43,9 +43,9 @@ class App
 
         try {
 
+            DIInjector::get('middleware'); //check middleware conditions
             $request = DIInjector::get('request');
             $router = DIInjector::get('router');
-
         } catch (DIErrorException $e) {
             echo $e->getMessage();
         }

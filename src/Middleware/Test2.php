@@ -20,7 +20,7 @@ class Test2 implements MiddlewareRuleInterface
     public function handle(array $request, \Closure $next)
     {
         if ($request['test2'] < 0) {
-            new RedirectResponse(Router::getLink('error', [], ['code' => 500, 'message' => 'test2 - failed']), 500);
+            throw new MiddlewareErrorException('test2 - failed');
         }
         return $next($request);
     }
