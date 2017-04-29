@@ -64,6 +64,10 @@ class Controller
      */
     public function render(string $view_path, array $params = [], array $enhanceParams = [], bool $with_layout = true): Response
     {
+        if ($this->isJSON($view_path)) {
+            return new JSONResponse($view_path);
+        }
+
         try {
             $render = new Renderer($view_path);
             $content = $render->getContent();

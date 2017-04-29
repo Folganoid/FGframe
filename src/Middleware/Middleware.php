@@ -36,12 +36,12 @@ class Middleware
      * @param array $rules
      * @param array $order
      */
-    public function __construct(array $rules, array $order)
+    public function __construct(array $rules, array $order, $params)
     {
         $this->rules = $rules;
         $this->order = $order;
         $this->count = 0;
-        $this->request = ['test1' => 1, 'usermode' => 1, 'test2' => 1]; // test params
+        $this->request = $params;
 
         try {
             $this->checkVariables($this->order);
