@@ -39,14 +39,7 @@ class Model extends QueryBuilder
         $this->setCase('select');
         $this->setOrderBy(['id DESC']);
 
-        try {
-            $stm = $this->db->prepare($this->build());
-            $stm->execute();
-            $this->checkErrors($stm);
-        } catch (BadQueryException $e) {
-            echo $e->getMessage();
-        }
-        return $stm->fetch(\PDO::FETCH_ASSOC);
+        return $this->executeQuery(true);
     }
 
     /**
@@ -61,15 +54,9 @@ class Model extends QueryBuilder
         $this->setWhere(['id =' . $id]);
         $this->setLimit(1);
 
-        try {
-            $stm = $this->db->prepare($this->build());
-            $stm->execute();
-            $this->checkErrors($stm);
-        } catch (BadQueryException $e) {
-            echo $e->getMessage();
-        }
-        return $stm->fetch(\PDO::FETCH_ASSOC);
+        return $this->executeQuery(true);
     }
+
 
     /**
      * insert in DB
@@ -83,13 +70,7 @@ class Model extends QueryBuilder
         $this->setColumns($columns);
         $this->setValues($values);
 
-        try {
-            $stm = $this->db->prepare($this->build());
-            $stm->execute();
-            $this->checkErrors($stm);
-        } catch (BadQueryException $e) {
-            echo $e->getMessage();
-        }
+        $this->executeQuery();
     }
 
     /**
@@ -102,13 +83,7 @@ class Model extends QueryBuilder
         $this->setCase('delete');
         $this->setWhere(['id =' . $id]);
 
-        try {
-            $stm = $this->db->prepare($this->build());
-            $stm->execute();
-            $this->checkErrors($stm);
-        } catch (BadQueryException $e) {
-            echo $e->getMessage();
-        }
+        $this->executeQuery();
     }
 
     /**
@@ -125,14 +100,7 @@ class Model extends QueryBuilder
         $this->setColumns($columns);
         $this->setValues($values);
 
-        try {
-            $stm = $this->db->prepare($this->build());
-            $stm->execute();
-            echo $this->build();
-            $this->checkErrors($stm);
-        } catch (BadQueryException $e) {
-            echo $e->getMessage();
-        }
+        $this->executeQuery();
     }
 
     /**
@@ -147,4 +115,29 @@ class Model extends QueryBuilder
             throw new BadQueryException(implode(': ', $stm->errorInfo()));
         }
     }
+
+    /**
+     * execute query string
+     *
+     * @param bool $return
+     * @param bool $isAll
+     * @return mixed
+     */
+    public function executeQuery(bool $return = false, bool $isAll = false)
+    {
+        try {
+            $stm = $this->db->prepare($this->build());
+            $stm->execute();
+            $this->checkErrors($stm);
+        } catch (BadQueryException $e) {
+            echo $e->getMessage();
+        }
+        if ($return) {
+            if ($isAll) {
+                return $stm->fetchAll(\PDO::FETCH_ASSOC);
+            }
+            return $stm->fetch(\PDO::FETCH_ASSOC);
+        }
+    }
+
 }

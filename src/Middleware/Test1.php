@@ -8,8 +8,7 @@
 
 namespace Fg\Frame\Middleware;
 
-use Fg\Frame\Response\RedirectResponse;
-use Fg\Frame\Router\Router;
+use Fg\Frame\Exceptions\MiddlewareErrorException;
 
 /**
  * Class Test1

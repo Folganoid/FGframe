@@ -45,6 +45,11 @@ class QueryBuilder
     protected $orderBy = [];
 
     /**
+     * @var array - set LEFT JOIN ON
+     */
+    protected $leftJoin = [];
+
+    /**
      * @var int - LIMIT;
      */
     protected $limit = 0;
@@ -108,6 +113,11 @@ class QueryBuilder
         $this->orderBy = $order;
     }
 
+    public function setLeftJoin(array $leftJoin)
+    {
+        $this->leftJoin = $leftJoin;
+    }
+
     /**
      * set LIMIT diapason
      * @param int $limit
@@ -147,6 +157,7 @@ class QueryBuilder
             default:
                 $sql = 'SELECT ' . $this->buildColumns() .
                     ' FROM ' . $this->table .
+                    $this->buildLeftJoin() .
                     $this->buildWhere() .
                     $this->buildOrder() .
                     $this->buildLimit();
@@ -239,6 +250,23 @@ class QueryBuilder
         };
         return $sql;
 
+    }
+
+    /**
+     * build LEFT JOIN ON string
+     *
+     * @return string
+     */
+    protected function buildLeftJoin()
+    {
+        $sql = '';
+        if (count($this->leftJoin) > 0) {
+            for ($i = 0; $i < count($this->leftJoin); $i++) {
+                $sql .= ' LEFT OUTER JOIN ' . $this->leftJoin[$i][0] . ' ON (' . $this->leftJoin[$i][1] . ') ';
+            }
+        }
+        $this->leftJoin = []; //reset
+        return $sql;
     }
 
 }
