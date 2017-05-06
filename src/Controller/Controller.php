@@ -79,7 +79,10 @@ class Controller
             return new JSONResponse($content);
         }
 
-        $allParams = array_merge($params, $enhanceParams);
+        $session = [];
+        if (isset($_SESSION)) $session = $_SESSION;
+
+        $allParams = array_merge($params, $enhanceParams, $session);
 
         if ($with_layout) {
             $pages = [

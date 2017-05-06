@@ -39,7 +39,7 @@ class Model extends QueryBuilder
         $this->setCase('select');
         $this->setOrderBy(['id DESC']);
 
-        return $this->executeQuery(true);
+        return $this->executeQuery(true, true);
     }
 
     /**
@@ -69,8 +69,7 @@ class Model extends QueryBuilder
         $this->setCase('insert');
         $this->setColumns($columns);
         $this->setValues($values);
-
-        $this->executeQuery();
+        //$this->executeQuery();
     }
 
     /**
@@ -126,6 +125,8 @@ class Model extends QueryBuilder
     public function executeQuery(bool $return = false, bool $isAll = false)
     {
         try {
+           // echo $this->build();
+           // die();
             $stm = $this->db->prepare($this->build());
             $stm->execute();
             $this->checkErrors($stm);

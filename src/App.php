@@ -3,14 +3,15 @@
 namespace Fg\Frame;
 
 use Fg\Frame\DI\DIInjector;
+use Fg\Frame\Exceptions\AccessDeniedException;
 use Fg\Frame\Exceptions\DIErrorException;
+use Fg\Frame\Exceptions\IncorrectLoginPassException;
 use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
 use Fg\Frame\Response\RedirectResponse;
 use Fg\Frame\Router\Router;
-
 
 
 /**
@@ -44,6 +45,8 @@ class App
         try {
 
             DIInjector::get('middleware'); //check middleware conditions
+            DIInjector::get('session');
+
             $request = DIInjector::get('request');
             $router = DIInjector::get('router');
         } catch (DIErrorException $e) {
@@ -63,6 +66,10 @@ class App
             echo $e->getMessage();
         } catch (InvalidRouteControllerException $e) {
             echo $e->getMessage();
+        } catch (AccessDeniedException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 403, 'message' => $e->getMessage()]), 403);
+        } catch (IncorrectLoginPassException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 401, 'message' => $e->getMessage()]), 401);
         }
     }
 

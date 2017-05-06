@@ -17,7 +17,8 @@ class Session
     /**
      * Session constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         session_start();
     }
 
@@ -26,7 +27,8 @@ class Session
      * @param $name
      * @return string
      */
-    public function get($name) {
+    public function get($name)
+    {
         return $_SESSION[$name] ?? 'undefined';
     }
 
@@ -35,7 +37,8 @@ class Session
      * @param $name
      * @param $value
      */
-    public function set($name, $value) {
+    public function set($name, $value)
+    {
         $_SESSION[$name] = $value;
     }
 
@@ -43,14 +46,16 @@ class Session
      * unset one session var
      * @param $name
      */
-    public function clearOne($name) {
+    public function clearOne($name)
+    {
         unset($_SESSION[$name]);
     }
 
     /**
      * frees all session variables
      */
-    public function clearAll() {
+    public function clearAll()
+    {
         session_unset();
     }
 }

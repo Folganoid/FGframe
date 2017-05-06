@@ -60,6 +60,11 @@ class QueryBuilder
     protected $offSet = 0;
 
     /**
+     * @var string - RETURNING
+     */
+    protected $returning = '';
+
+    /**
      * set DB method
      * @param string $case
      */
@@ -129,6 +134,11 @@ class QueryBuilder
         $this->offSet = $offset;
     }
 
+    public function setReturning(string $col)
+    {
+        $this->returning = $col;
+    }
+
     /**
      * build DBSQL query string
      * @return string
@@ -138,7 +148,8 @@ class QueryBuilder
         switch ($this->case) {
             case 'delete':
                 $sql = 'DELETE FROM ' . $this->table .
-                    $this->buildWhere();
+                    $this->buildWhere() .
+                    $this->buildReturning();
                 break;
 
             case 'update':
@@ -150,7 +161,7 @@ class QueryBuilder
             case 'insert':
                 $sql = 'INSERT INTO ' . $this->table .
                     ((count($this->columns) > 0) ? ' (' . $this->buildColumns() . ') ' : '') .
-                    ' VALUES (' . $this->buildValues() . ') ' . ';';
+                    ' VALUES (' . $this->buildValues() . ') ' . $this->buildReturning(). ';';
                 break;
 
             case 'select':
@@ -266,6 +277,15 @@ class QueryBuilder
             }
         }
         $this->leftJoin = []; //reset
+        return $sql;
+    }
+
+    protected function buildReturning()
+    {
+        $sql = '';
+        if(strlen($this->returning) > 0) {
+            $sql = ' RETURNING ' . $this->returning;
+        }
         return $sql;
     }
 
