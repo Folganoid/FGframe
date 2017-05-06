@@ -2,51 +2,25 @@
 
 namespace Fg\Frame\Request;
 /**
- * Class Request - singleton
+ * Class Request
  * @package Fg\Frame\Request
  */
 class Request
 {
-    private static $request = null;
     public static $URI;
+    public $params;
 
     /**
      * Request constructor.
      */
-    private function __construct()
+    public function __construct()
     {
         self::$URI = $_SERVER["REQUEST_URI"];
     }
 
     /**
-     * Returns request
-     *
-     * @return Request
-     */
-    public static function getRequest(): self
-    {
-        if (!self::$request) {
-            self::$request = new self();
-        }
-
-        return self::$request;
-    }
-
-    private function __clone()
-    {
-    }
-
-    private function __sleep()
-    {
-    }
-
-    private function __wakeup()
-    {
-    }
-
-
-    /**
-     * Get current URI
+     * Get current URI without GET params
+     * trim '/' from end, if exist
      *
      * @return string
      */
@@ -57,9 +31,9 @@ class Request
         } else $result = self::$URI;
 
         if (strpos($result, "?")) {
+            $this->params = substr($result, strpos($result, "?") + 1);
             return substr($result, 0, strpos($result, "?"));
         } else return $result;
-
     }
 
     /**
@@ -79,18 +53,9 @@ class Request
      */
     public function getUriParams(): array
     {
-        $tempArr = preg_split("`\?|\&`", self::$URI);
-        unset($tempArr[0]);
-        sort($tempArr);
-
-        $result = [];
-
-        for ($i = 0; $i < count($tempArr); $i++) {
-            $result[(explode('=', $tempArr[$i]))[0]] = (explode('=', $tempArr[$i]))[1];
-        }
-
-        return $result;
-
+        $res = [];
+        parse_str($this->params, $res);
+        return $res;
     }
 
 }

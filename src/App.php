@@ -2,11 +2,15 @@
 
 namespace Fg\Frame;
 
+use Fg\Frame\DI\DIInjector;
+use Fg\Frame\Exceptions\AccessDeniedException;
+use Fg\Frame\Exceptions\DIErrorException;
+use Fg\Frame\Exceptions\IncorrectLoginPassException;
 use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
-use Fg\Frame\Request\Request;
+use Fg\Frame\Response\RedirectResponse;
 use Fg\Frame\Router\Router;
 
 
@@ -22,9 +26,9 @@ class App
      * App constructor.
      * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct()
     {
-        $this->config = $config['routeConfig'];
+        // $this->config = Validation::checkConfigFile(ROOTDIR . '/config/router.php');
     }
 
     /**
@@ -33,23 +37,39 @@ class App
      */
     public function start()
     {
-        $request = Request::getRequest();
-        $router = new Router($this->config);
+        //$request = new Request();
+        //$router = new Router($this->config['config']);
+
+        DIInjector::setConfig(ROOTDIR . '/config/services.php');
+
+        try {
+
+            DIInjector::get('middleware'); //check middleware conditions
+            DIInjector::get('session');
+
+            $request = DIInjector::get('request');
+            $router = DIInjector::get('router');
+        } catch (DIErrorException $e) {
+            echo $e->getMessage();
+        }
 
         try {
 
             $routerResult = $router->getRoute($request);
-
-            Router::valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
+            $router->valid($routerResult->controller, $routerResult->method, $routerResult->params, $routerResult->enhanceParams);
 
         } catch (InvalidHttpMethodException $e) {
             echo $e->getMessage();
         } catch (InvalidUrlException $e) {
-            echo $e->getMessage();
+            new RedirectResponse(Router::getLink('error', [], ['code' => 404, 'message' => $e->getMessage()]), 404);
         } catch (InvalidRouteMethodException $e) {
             echo $e->getMessage();
         } catch (InvalidRouteControllerException $e) {
             echo $e->getMessage();
+        } catch (AccessDeniedException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 403, 'message' => $e->getMessage()]), 403);
+        } catch (IncorrectLoginPassException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 401, 'message' => $e->getMessage()]), 401);
         }
     }
 
@@ -61,4 +81,3 @@ class App
 
     }
 }
-

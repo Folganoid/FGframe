@@ -8,10 +8,14 @@ use Fg\Frame\Exceptions\InvalidUrlException;
 use Fg\Frame\Request\Request;
 use Fg\Frame\Response\Response;
 
+/**
+ * Class Router
+ * @package Fg\Frame\Router
+ */
 class Router
 {
     const DEFAULT_VAR_REGEXP = "[^\/]+";
-    private $routes = [];
+    private static $routes = [];
 
     /**
      * Router constructor.
@@ -20,7 +24,7 @@ class Router
     {
         foreach ($config as $key => $value) {
             $existed_variables = $this->getExistedVariables($value);
-            $this->routes[$key] = [
+            self::$routes[$key] = [
                 "origin" => $value["pattern"],
                 "regexp" => $this->getRegexpFromRoute($value, $existed_variables),
                 "method" => isset($value["method"]) ? $value["method"] : "GET",
@@ -46,11 +50,9 @@ class Router
         $method = $request->getMethod();    // from $_SERVER
         $enhanceParams = $request->getUriParams();
 
-        foreach ($this->routes as $key => $value) {
+        foreach (self::$routes as $key => $value) {
             if ((preg_match('`' . $value['regexp'] . '`', $uri, $matches)) AND ($method == $value['method'])) {
-
                 $variablesArr = [];
-
                 for ($i = 0; $i < count($value['variables']); $i++) {
                     $variablesArr[$value['variables'][$i]] = $matches[$i + 1];
                 }
@@ -59,8 +61,7 @@ class Router
                 throw new InvalidHttpMethodException("Method '" . $method . "' is not allow");
             }
         };
-        throw new InvalidUrlException("Incorrect link: '" . $uri . "'");
-
+        throw new InvalidUrlException("Incorrect link - " . $uri);
     }
 
     /**
@@ -128,10 +129,9 @@ class Router
      * @param $route_name
      * @param array $params
      */
-    public function getLink($route_name, $params = [], $enhancedParams = [])
+    public static function getLink($route_name, $params = [], $enhancedParams = [])
     {
-
-        $pattern = $this->routes[$route_name]['origin'];
+        $pattern = self::$routes[$route_name]['origin'];
 
         foreach ($params as $key => $value) {
             $pattern = str_replace("{" . $key . "}", $value, $pattern);
@@ -147,6 +147,11 @@ class Router
         return $pattern;
     }
 
+    public static function test($str)
+    {
+        return $str;
+    }
+
     /**
      * Route validator
      *
@@ -156,17 +161,13 @@ class Router
      * @throws InvalidRouteControllerException
      * @throws InvalidRouteMethodException
      */
-    public static function valid($routeController, $routeMethod, $routeParams = [], $routeEnhanceParams = [])
+    public function valid($routeController, $routeMethod, $routeParams = [], $routeEnhanceParams = [])
     {
-
         if (class_exists($routeController)) {
             $refClass = new \ReflectionClass($routeController);
-
             if ($refClass->hasMethod($routeMethod)) {
-
                 $aaa = new $routeController;
                 $aaa->$routeMethod($routeParams, $routeEnhanceParams);
-
             } else throw new InvalidRouteMethodException($routeMethod . ' - Invalid Route Method');
         } else throw new InvalidRouteControllerException($routeController . ' - Invalid Route Controller');
     }

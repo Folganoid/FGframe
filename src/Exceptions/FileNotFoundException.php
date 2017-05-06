@@ -2,14 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: fg
- * Date: 21.02.17
- * Time: 17:19
+ * Date: 24.03.17
+ * Time: 10:24
  */
+
 namespace Fg\Frame\Exceptions;
+
 /**
- * Class InvalidUrlException
+ * Class FileNotFoundException
  * @package Fg\Frame\Exceptions
  */
-class InvalidUrlException extends \Exception
+class FileNotFoundException extends \Exception
 {
+
 }
