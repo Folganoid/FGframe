@@ -5,6 +5,7 @@ namespace Fg\Frame;
 use Fg\Frame\DI\DIInjector;
 use Fg\Frame\Exceptions\AccessDeniedException;
 use Fg\Frame\Exceptions\DIErrorException;
+use Fg\Frame\Exceptions\IncorrectEntryDataException;
 use Fg\Frame\Exceptions\IncorrectLoginPassException;
 use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
@@ -70,6 +71,8 @@ class App
             new RedirectResponse(Router::getLink('error', [], ['code' => 403, 'message' => $e->getMessage()]), 403);
         } catch (IncorrectLoginPassException $e) {
             new RedirectResponse(Router::getLink('error', [], ['code' => 401, 'message' => $e->getMessage()]), 401);
+        } catch (IncorrectEntryDataException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 400, 'message' => $e->getMessage()]), 400);
         }
     }
 
