@@ -37,8 +37,6 @@ class Model extends QueryBuilder
     public function getAll()
     {
         $this->setCase('select');
-        $this->setOrderBy(['id DESC']);
-
         return $this->executeQuery(true, true);
     }
 

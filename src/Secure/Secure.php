@@ -9,27 +9,27 @@
 namespace Fg\Frame\Secure;
 
 use Fg\Frame\DI\DIInjector;
+use Fg\Frame\Exceptions\AccessDeniedException;
 
 /**
-  * Class Secure
+ * Class Secure
  * @package Fg\Frame\Secure
  */
 class Secure
 {
     protected $session;
-
     protected static $user;
-
     protected $mapping = [];
+    protected $variables = [];
 
     /**
      * Secure constructor.
      * @param array $mapping
      */
-    public function __construct(array $mapping = [])
+    public function __construct(array $mapping = [], array $variables = [])
     {
-
         $this->mapping = $mapping;
+        $this->variables = $variables;
         $this->session = DIInjector::get('session');
     }
 
@@ -45,7 +45,7 @@ class Secure
             self::$user = $user;
 
             foreach (self::$user as $k => $v) {
-                $this->session->set('SESSION_' . $k, $v);
+                $this->session->set($this->variables[$k], $v);
             }
         }
         return self::$user;
@@ -59,11 +59,10 @@ class Secure
      */
     public function checkAllow(string $name): bool
     {
-
-        if ($this->mapping[$name] <= $_SESSION['SESSION_rank']) {
+        if ($this->mapping[$name] <= $_SESSION[$this->variables['rank']]) {
             return true;
         }
-        return false;
+        throw new AccessDeniedException('Access denied! Your access level is low.');
     }
 
     /**
@@ -72,13 +71,22 @@ class Secure
      * @param int $userId
      * @return bool
      */
-
     public function checkOwner(int $userId): bool
     {
-        if ($userId == $_SESSION['SESSION_id']) {
+        if ($userId == $_SESSION[$this->variables['id']] OR $this->isAdmin()) {
             return true;
         }
-        return false;
+        throw new AccessDeniedException('Access denied! You are not owner of this account');
+    }
+
+    /**
+     * check admin rank
+     *
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return ($_SESSION[$this->variables['rank']] >= $this->mapping['admin']) ? true : false;
     }
 
 }

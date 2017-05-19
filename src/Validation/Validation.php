@@ -46,7 +46,7 @@ class Validation
                 }
             }
 
-            $this->rule = preg_match('/^' . $pattern . '$/', $str, $matches);
+            $this->rule = preg_match('/' . $pattern . '/', $str, $matches);
 
             if (!$matches) {
                 $this->setError('RegExp pattern does not match');

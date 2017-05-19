@@ -2,8 +2,10 @@
 
 namespace Fg\Frame;
 
+use Fg\Controller\ErrorController;
 use Fg\Frame\DI\DIInjector;
 use Fg\Frame\Exceptions\AccessDeniedException;
+use Fg\Frame\Exceptions\DataErrorException;
 use Fg\Frame\Exceptions\DIErrorException;
 use Fg\Frame\Exceptions\IncorrectEntryDataException;
 use Fg\Frame\Exceptions\IncorrectLoginPassException;
@@ -11,6 +13,7 @@ use Fg\Frame\Exceptions\InvalidRouteMethodException;
 use Fg\Frame\Exceptions\InvalidHttpMethodException;
 use Fg\Frame\Exceptions\InvalidRouteControllerException;
 use Fg\Frame\Exceptions\InvalidUrlException;
+use Fg\Frame\Exceptions\MiddlewareErrorHighLevelException;
 use Fg\Frame\Response\RedirectResponse;
 use Fg\Frame\Router\Router;
 
@@ -38,9 +41,6 @@ class App
      */
     public function start()
     {
-        //$request = new Request();
-        //$router = new Router($this->config['config']);
-
         DIInjector::setConfig(ROOTDIR . '/config/services.php');
 
         try {
@@ -53,6 +53,12 @@ class App
         } catch (DIErrorException $e) {
             echo $e->getMessage();
         }
+         catch (MiddlewareErrorHighLevelException $e) {
+             $res = new ErrorController;
+             $res->getError([], ['code' => 406, 'message' => $e->getMessage()]);
+             die();
+        }
+
 
         try {
 
@@ -73,6 +79,8 @@ class App
             new RedirectResponse(Router::getLink('error', [], ['code' => 401, 'message' => $e->getMessage()]), 401);
         } catch (IncorrectEntryDataException $e) {
             new RedirectResponse(Router::getLink('error', [], ['code' => 400, 'message' => $e->getMessage()]), 400);
+        } catch (DataErrorException $e) {
+            new RedirectResponse(Router::getLink('error', [], ['code' => 404, 'message' => $e->getMessage()]), 404);
         }
     }
 
