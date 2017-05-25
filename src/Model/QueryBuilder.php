@@ -155,7 +155,8 @@ class QueryBuilder
             case 'update':
                 $sql = 'UPDATE ' . $this->table . ' SET ' .
                     $this->buildSet() .
-                    $this->buildWhere() . ';';
+                    $this->buildWhere() .
+                    $this->buildReturning() . ';';
                 break;
 
             case 'insert':
@@ -286,6 +287,7 @@ class QueryBuilder
         if(strlen($this->returning) > 0) {
             $sql = ' RETURNING ' . $this->returning;
         }
+        $this->returning = ''; //reset
         return $sql;
     }
 

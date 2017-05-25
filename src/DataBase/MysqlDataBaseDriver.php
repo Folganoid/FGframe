@@ -8,18 +8,15 @@
 
 namespace Fg\Frame\DataBase;
 
-
-class MysqlDataBaseDriver extends PostgresqlDataBaseDriver
+/**
+ * Class MysqlDataBaseDriver
+ * @package Fg\Frame\DataBase
+ */
+class MysqlDataBaseDriver extends SqlAbstractDataBaseDriver
 {
     public function connect()
     {
-        try {
-            $this->connecting = new \PDO("mysql:host=" . $this->config['host'] . ";dbname=" . $this->config['db'], $this->config['user'], $this->config['pass']);
-        } catch (\PDOException $e) {
-            exit('MySQL DataBase connection error: ' . $e->getMessage());
-        }
-
-
+        $this->connecting = new \PDO("mysql:host=" . $this->config['host'] . ";dbname=" . $this->config['db'], $this->config['user'], $this->config['pass']);
     }
 
 }

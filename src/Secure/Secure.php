@@ -76,7 +76,7 @@ class Secure
         if ($userId == $_SESSION[$this->variables['id']] OR $this->isAdmin()) {
             return true;
         }
-        throw new AccessDeniedException('Access denied! You are not owner of this account');
+        throw new AccessDeniedException('Access denied! You are not owner of this data');
     }
 
     /**
