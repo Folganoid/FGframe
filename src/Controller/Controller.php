@@ -62,7 +62,7 @@ class Controller
      * @param bool $with_layout
      * @return Response
      */
-    public function render(string $view_path, array $params = [], array $enhanceParams = [], bool $with_layout = true): Response
+    public function render(string $view_path, array $params = [], array $enhanceParams = [], bool $with_layout = true, string $content = ''): Response
     {
         if ($this->isJSON($view_path)) {
             return new JSONResponse($view_path);
@@ -70,7 +70,7 @@ class Controller
 
         try {
             $render = new Renderer($view_path);
-            $content = $render->getContent();
+            $content .= $render->getContent();
         } catch (FileNotFoundException $e) {
             exit($e->getMessage());
         }
