@@ -15,13 +15,17 @@ class DataBase
     private $driverDB;
     public $methods;
 
+    /**
+     * DataBase constructor.
+     * @param array $config
+     * @param string $driver
+     */
     public function __construct(array $config, string $driver)
     {
         $this->config = $config;
         $this->driverDB = $driver;
 
         $driverFileName = 'Fg\\Frame\\DataBase\\' . $this->driverDB . 'DataBaseDriver';
-
         $this->methods = new $driverFileName($this->config);
 
     }

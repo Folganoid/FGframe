@@ -29,7 +29,7 @@ class Session
      */
     public function get($name)
     {
-        return $_SESSION[$name] ?? 'undefined';
+        return $_SESSION[$name] ?? null;
     }
 
     /**

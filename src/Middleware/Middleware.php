@@ -73,7 +73,12 @@ class Middleware
          * first start
          */
         if (count($this->request) > 0) {
-            (new $this->rules[$this->order[$this->count]])->handle($this->request, $this->next);
+            try {
+                (new $this->rules[$this->order[$this->count]])->handle($this->request, $this->next);
+            } catch (MiddlewareErrorException $e) {
+                exit($e->getMessage());
+            }
+
         } else {
             return true;
         }

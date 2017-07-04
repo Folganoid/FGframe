@@ -16,13 +16,12 @@ use Fg\Frame\Router\Router;
  * Class UserMode
  * @package Fg\Frame\Middleware
  */
-class UserMode implements MiddlewareRuleInterface
+class TechWorks implements MiddlewareRuleInterface
 {
     public function handle(array $request, \Closure $next)
     {
-        if ($request['usermode'] < 0) {
-            throw new MiddlewareErrorException('usermod is failed');
-            //new RedirectResponse(Router::getLink('error', [], ['code' => 401, 'message' => 'Access denied']), 401);
+        if ($request['technical_works'] != 0) {
+            throw new MiddlewareErrorException('Application temporarily unavailable due to technical issues. Please try again later.');
         }
         return $next($request);
     }
